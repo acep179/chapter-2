@@ -10,3 +10,12 @@
 .text-justify{
     text-align: justify;
 }
+.hover-orange:hover{
+    color: orangered !important;
+}
+.fs-7{
+    font-size: .75rem;
+}
+.project-btn{
+    width: 125px;
+}
