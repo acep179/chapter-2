@@ -1,0 +1,12 @@
+.btn-orange {
+    background-color: orangered;
+}
+.btn-orange:hover {
+    background-color: orange;
+}
+.social-media img{
+    width: 40px;
+}
+.text-justify{
+    text-align: justify;
+}
