@@ -5,7 +5,7 @@
     background-color: orangered;
 }
 .btn-orange:hover {
-    background-color: orange;
+    background-color: rgb(243, 65, 0) ;
 }
 .social-media img{
     width: 40px;
