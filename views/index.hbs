@@ -32,8 +32,13 @@
                             <a class="nav-link active hover-orange" aria-current="page" href="./">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link hover-orange" href="./#myProject">My Project</a>
+                        </li>
+                        {{#if isLogin}}
+                        <li class="nav-item">
                             <a class="nav-link hover-orange" href="./add-project">Add Project</a>
                         </li>
+                        {{/if}}
                     </ul>
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -50,7 +55,8 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title text-center text-md-start">Hai, Selamat Datang di Website Saya! :D</h5>
-                        <p class="card-text text-justify">Saya adalah seorang Fullstack Web Developer. Pertamakali saya
+                        <p class="card-text text-justify">Saya adalah seorang Fullstack Web Developer.
+                            Pertamakali saya
                             menyukai
                             bidang 'perkodingan' adalah ketika saya duduk di bangku SMA. Karena pada saat itu, ternyata
                             di Yayasan tempat saya belajar juga terdapat sekolah SMK dengan jurusan Rekayasa Perangkat
@@ -61,7 +67,7 @@
                             komputer dengan mengikuti Bootcamp Dumbways. Pada Bootcamp ini, saya masih berada di stage
                             pertama. Kendati demikian, saya yakin saya bisa melalui semua tantangan ke depannya hingga
                             saya dapat menuntaskan pembelajaran saya di sini.</p>
-                        <p class="card-text text-justfy">Terdapat beberapa teknologi yang telah saya kuasai saat ini.
+                        <p class="card-text text-justify">Terdapat beberapa teknologi yang telah saya kuasai saat ini.
                             Yaitu: HTML,
                             CSS, JavaScript, TailwindCSS, dan SASS. Jika anda tertarik untuk merekrut saya agar
                             bergabung bersama tim anda, silakan hubungi saya melalui tombol di bawah. Anda juga dapat
@@ -72,19 +78,19 @@
                             <i class='bx bx-download'></i>
                         </a>
                         <div class="mt-4 social-media">
-                            <a class="text-decoration-none" href="mailto:acep.awaludin179@gmail.com">
+                            <a class="text-decoration-none" target="_blank" href="./contact">
                                 <img src="./../assets/img/email.svg" alt="Email">
                             </a>
-                            <a class="text-decoration-none" href="https://wa.me/6281383647020">
+                            <a class="text-decoration-none" target="_blank" href="https://wa.me/6281383647020">
                                 <img src="./../assets/img/whatsapp.svg" alt="WhatsApp">
                             </a>
-                            <a class="text-decoration-none" href="https://github.com/acep179">
+                            <a class="text-decoration-none" target="_blank" href="https://github.com/acep179">
                                 <img src="./../assets/img/github.svg" alt="GitHub">
                             </a>
-                            <a class="text-decoration-none" href="https://linkedin.com/in/acep179/">
+                            <a class="text-decoration-none" target="_blank" href="https://linkedin.com/in/acep179/">
                                 <img src="./../assets/img/linkedin.svg" alt="LinkedIn">
                             </a>
-                            <a class="text-decoration-none" href="https://instagram.com/">
+                            <a class="text-decoration-none" target="_blank" href="https://instagram.com/">
                                 <img src="./../assets/img/instagram.svg" alt="Instagram">
                             </a>
                         </div>
@@ -102,79 +108,38 @@
             </div>
         </div>
         <div id="myProject" class="container mb-5 d-flex flex-wrap justify-content-center">
-            <h2 class="w-100 text-center mb-4">My Project</h1>
-                <div class="card mx-3 mb-4" style="width: 18rem;">
-                    <img src="./../assets/img/project/gudangku.png" class="card-img-top" alt="gudangku">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="mb-3">
-                            <h5 class="card-title">Gudangku</h5>
-                            <p class="card-text">Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.</p>
+            <h2 class="w-100 text-center mb-4">My Project</h2>
+            {{#each dataProject}}
+            <div class="card mx-3 mb-4" style="width: 18rem;">
+                <img src="{{this.image}}" class="card-img-top" alt="gudangku">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div class="mb-3">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            Durasi:
+                            {{#if this.yearDuration}}
+                            {{this.yearDuration}} tahun
+                            {{/if}}
+                            {{#if this.monthDuration}}
+                            {{this.monthDuration}} bulan
+                            {{/if}}
+                        </h6>
+                        <p class="card-text">{{this.description}}</p>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="w-100 fs-1">
+                            {{#each this.technologies}}
+                            {{{this}}}
+                            {{/each}}
                         </div>
-                        <div class="d-flex flex-wrap justify-content-between">
-                            <div class="w-100 fs-1">
-                                <i class='bx bxl-html5'></i>
-                                <i class='bx bxl-css3'></i>
-                                <i class='bx bxl-javascript'></i>
-                                <i class='bx bxl-tailwind-css'></i>
-                                <i class='bx bxl-sass'></i>
-                            </div>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
-                        </div>
+                        {{#if isLogin}}
+                        <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
+                        <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
+                        {{/if}}
                     </div>
                 </div>
-                <div class="card mx-3 mb-4" style="width: 18rem;">
-                    <img src="./../assets/img/project/gudangku.png" class="card-img-top" alt="...">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="mb-4">
-                            <h5 class="card-title">Gudangku</h5>
-                            <p class="card-text">Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.</p>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-between">
-                            <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mx-3 mb-4" style="width: 18rem;">
-                    <img src="./../assets/img/project/gudangku.png" class="card-img-top" alt="...">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="mb-4">
-                            <h5 class="card-title">Gudangku</h5>
-                            <p class="card-text">Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.</p>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-between">
-                            <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mx-3 mb-4" style="width: 18rem;">
-                    <img src="./../assets/img/project/gudangku.png" class="card-img-top" alt="...">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="mb-4">
-                            <h5 class="card-title">Gudangku</h5>
-                            <p class="card-text">Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.</p>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-between">
-                            <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mx-3 mb-4" style="width: 18rem;">
-                    <img src="./../assets/img/project/gudangku.png" class="card-img-top" alt="...">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="mb-4">
-                            <h5 class="card-title">Gudangku</h5>
-                            <p class="card-text">Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.</p>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-between">
-                            <p href="#" class="btn btn-dark py-0 project-btn">Edit</p>
-                            <p href="#" class="btn btn-dark py-0 project-btn">Delete</p>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            {{/each}}
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
