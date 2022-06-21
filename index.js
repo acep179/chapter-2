@@ -23,18 +23,15 @@ let isLogin = true
 let dataProject = [
     {
         name: 'Gudangku',
-        startDateNumber: '2022-04-28',
-        endDateNumber: '2022-05-30',
-        startMonthName: 'Apr',
-        endMonthName: 'Mei',
-        startYearNumber: 2022,
-        endYearNumber: 2022,
+        shortStartDate: '28 Apr 2022',
+        shortEndDate: '30 Mei 2022',
         monthDuration: 1,
         yearDuration: 0,
-        description: 'Gudangku adalah sebuah aplikasi manajemen gudang berbasis web.',
+        descriptionShort: `Gudangku adalah sebuah aplikasi manajemen gudang berbasis web. Karena`,
+        description: 'Gudangku adalah sebuah aplikasi manajemen gudang berbasis web. Karena berbasis web, aplikasi manajemen gudang dapat digunakan kapan pun dan di mana pun menggunakan perangkat apapun. Baik menggunakan komputer, laptop, tablet, mapun smartphone. Tentu saja, hal ini sangat memudahkan bagi pemilik bisnis sehingga tidak perlu khawatir ketika sedang ada keperluan di luar kantor.',
         technologies: ["<i class='bx bxl-html5'></i>",
         "<i class='bx bxl-css3'></i>","<i class='bx bxl-javascript'></i>"],
-        technologiesName: ['HTML','CSS','JavaScript'],
+        technologiesName: ["<i class='bx bxl-html5 fs-1'></i> HTML", "<i class='bx bxl-css3 fs-1'></i> CSS", "<i class='bx bxl-javascript fs-1'></i> JavaScript"],
         image: './../assets/img/project/gudangku.png',
         isLogin
     }
@@ -55,14 +52,8 @@ app.post('/add-project',function (req,res) {
     let monthDuration = ''
     let yearDuration = ''
 
-    let startDateNumber = ''
-    let endDateNumber = ''
-
-    let startMonthName = ''
-    let endMonthName = ''
-
-    let startYearNumber = ''
-    let endYearNumber = ''
+    let shortStartDate = ''
+    let shortEndDate = ''
 
     const getTime = (startDate, endDate) => {
         startDate = new Date(startDate)
@@ -99,6 +90,9 @@ app.post('/add-project',function (req,res) {
 
         startDateNumber = startDate.getDate()
         endDateNumber = endDate.getDate()
+
+        shortStartDate = `${startDateNumber} ${startMonthName} ${startYearNumber}`
+        shortEndDate = `${endDateNumber} ${endMonthName} ${endYearNumber}`
     }
     
     // . Techologies
@@ -109,41 +103,40 @@ app.post('/add-project',function (req,res) {
     if (html){
         html = data.projectHTML
         technologies.push(html)
-        technologiesName.push('HTML')
+        technologiesName.push(`${html} HTML`)
     }
     
     let css = Boolean(data.projectCSS)
     if (css){
         css = data.projectCSS
         technologies.push(css)
-        technologiesName.push('CSS')
+        technologiesName.push(`${css} CSS`)
     }
     
     let js = Boolean(data.projectJS)
     if (js){
         js = data.projectJS
         technologies.push(js)
-        technologiesName.push('JavaScript')
+        technologiesName.push(`${js} JavaScript`)
     }
     
     let tailwind = Boolean(data.projectTailwind)
     if (tailwind){
         tailwind = data.projectTailwind
         technologies.push(tailwind)
-        technologiesName.push('TailwindCSS')
+        technologiesName.push(`${tailwind} TailwindCSS`)
     }
     
     let sass = Boolean(data.projectSASS)
     if (sass){
         sass = data.projectSASS
         technologies.push(sass)
-        technologiesName.push('SASS')
+        technologiesName.push(`${sass} SASS`)
     }
     
     //. Image
 
     let image = data.projectImage
-    // image = URL.createObjectURL(image[0])
 
     getTime(startDate,endDate)
     getDateName(startDate,endDate)
@@ -151,14 +144,11 @@ app.post('/add-project',function (req,res) {
     //. Set Project Form
     let setProjectForm = {
         name,
-        startDateNumber,
-        endDateNumber,
-        startMonthName,
-        endMonthName,
-        startYearNumber,
-        endYearNumber,
+        shortStartDate,
+        shortEndDate,
         monthDuration,
         yearDuration,
+        descriptionShort: description.slice(0,70),
         description,
         technologies,
         technologiesName,
@@ -170,36 +160,26 @@ app.post('/add-project',function (req,res) {
     res.redirect('/#myProject')
 })
 
-/*
-app.post('/add-project', function(req,res){
-    
-    let data = req.body
-    
-    data = {
-        projectName: data.projectName,
-        projectStartDate: data.projectStartDate,
-        projectEndDate: data.projectEndDate,
-        projectDescription: data.projectDescription,
-        projectTechnologies: [data.projectHTML,data.projectCSS,data.projectJS, data.projectTailwind, data.projectSASS],
-        isLogin
-    }
-    
-    dataProject.push(data)
-    res.redirect('/#myProject')
-})*/
 
 //. Menampilkan Project + Render Home
 
 app.get('/', function(req,res){
-
-    console.log(dataProject)
 
     // console.log(dataProject)
     res.render('index',{isLogin,dataProject})
 
 })
 
+//.  Menampilkan Detail Project Berdasarkan ID
 
+app.get('/project-detail/:index', function(req,res){
+
+    let index = req.params.index
+
+    let project = dataProject[index]
+
+    res.render('project-detail',project)
+})
 
 app.listen(port, function(){
     console.log(`Berjalan di port ${port}`)

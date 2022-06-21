@@ -1,6 +1,9 @@
 .form-width{
     width: 350px;
 }
+.basis-50{
+    flex-basis: 50%;
+}
 .btn-orange {
     background-color: orangered;
 }
