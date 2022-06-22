@@ -4,6 +4,9 @@
 .basis-50{
     flex-basis: 50%;
 }
+.text-orange{
+    color: orangered;
+}
 .btn-orange {
     background-color: orangered;
 }
