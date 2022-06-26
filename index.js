@@ -6,6 +6,8 @@ const db = require('./assets/js/db')
 const multer = require('multer')
 const { query } = require('express')
 const upload = multer({dest: 'assets/img/project'})
+
+const bcrypt = require('bcrypt')
     
 const port = 8000
 
@@ -41,11 +43,12 @@ db.connect(function(err,client,done){
 
     app.post('/register', function (req,res,next) {
         
-        let data = req.body
-        console.log(data)
+        let {userName,userEmail,userPassword} = req.body
 
+        const saltRound = 10
+        const hashedPassword = bcrypt.hashSync(userPassword, saltRound)
         const query = `INSERT INTO tb_user(name, email, password)
-        VALUES ('${data.userName}','${data.userEmail}','${data.userPassword}');`
+        VALUES ('${userName}','${userEmail}','${hashedPassword}');`
 
         client.query(query, function(err, result){
             if(err) throw err
