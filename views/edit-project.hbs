@@ -16,7 +16,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-light h-10vh">
             <div class="container">
-                <a class="navbar-brand" href="./">
+                <a class="navbar-brand" href="./../">
                     <img src="./../assets/img/logo.png" alt="Logo Dumbways" width="30" height="24">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -27,7 +27,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active hover-orange" aria-current="page" href="./../">Home</a>
+                            <a class="nav-link hover-orange" aria-current="page" href="./../">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link hover-orange" href="./../#myProject">My Project</a>
@@ -38,7 +38,22 @@
                         </li>
                         {{/if}}
                     </ul>
-                    <ul class="navbar-nav mb-2 mb-lg-0">
+                    <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
+                        {{#if isLogin}}
+                        <li class="nav-item">
+                            <p class="nav-link hover-orange mb-0">user: {{user.name}}</p>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link me-2 hover-orange" href="./../logout">Logout</a>
+                        </li>
+                        {{else}}
+                        <li class="nav-item">
+                            <a class="nav-link hover-orange" href="./../register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link hover-orange me-2" href="./../login">Login</a>
+                        </li>
+                        {{/if}}
                         <li class="nav-item">
                             <a class="nav-link btn btn-orange text-light py-1" href="./../contact">Contact Me</a>
                         </li>

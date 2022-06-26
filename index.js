@@ -3,32 +3,49 @@ const app = express()
 
 const db = require('./assets/js/db')
 
+const bcrypt = require('bcrypt')
+const session = require('express-session')
+const flash = require('express-flash')
+
 const multer = require('multer')
 const { query } = require('express')
 const upload = multer({dest: 'assets/img/project'})
 
-const bcrypt = require('bcrypt')
     
 const port = 8000
 
 app.set('view engine','hbs')
 app.use('/assets', express.static('assets'))
 app.use(express.urlencoded({extended: false}))
+app.use(flash())
+app.use(session({
+    secret: 'acep awaludin',
+    resave: false,
+    saveUnitialized: true,
+    cookie: {
+    maxAge: 2 * 60 * 60 * 1000 //milisecond to 2 hour,, max age 2 hour
+    }
+}))
 
-let isLogin = true
 
 //. Rendering
 app.get('/contact', function(req,res){
-    res.render('contact', {isLogin})
-})
-app.get('/add-project', function(req,res){
-    res.render('add-project',{isLogin})
+    res.render('contact', {isLogin: req.session.isLogin, user: req.session.user})
 })
 app.get('/register', function(req,res){
-    res.render('register',{isLogin})
+    res.render('register',{isLogin: req.session.isLogin, user: req.session.user})
 })
 app.get('/login', function(req,res){
-    res.render('login',{isLogin})
+    res.render('login',{isLogin: req.session.isLogin, user: req.session.user})
+})
+app.get('/add-project', function(req,res){
+
+    if(!req.session.user){
+        req.flash('danger', 'Silakan Login Terlebih Dahulu')
+        return res.redirect('/login')
+    }
+
+    res.render('add-project',{isLogin: req.session.isLogin, user: req.session.user})
 })
 
 //! Render Home sudah sekalian dengan Menampilkan Project di bawah
@@ -53,13 +70,57 @@ db.connect(function(err,client,done){
         client.query(query, function(err, result){
             if(err) throw err
             
-            res.redirect('/#myProject')
+            res.redirect('/login')
         })
     })
-
+    
     //. Login
+    
+    app.post('/login', function (req,res,next) {
 
+        let {userEmail, userPassword} = req.body
 
+        const query = `SELECT * FROM tb_user WHERE email = '${userEmail}'`
+    
+        client.query(query, function(err,result){
+    
+            if(err) throw err
+    
+            console.log(result.rows);
+    
+            if(result.rows.length == 0) {
+                req.flash('danger','Email belum terdaftar')
+                return res.redirect('/login')
+            }
+    
+            const isMatch = bcrypt.compareSync(userPassword, result.rows[0].password)
+
+            console.log(isMatch)
+    
+            if(isMatch) {
+
+                console.log('login berhasil');
+    
+                req.session.isLogin = true
+                req.session.user = {
+                    id: result.rows[0].id,
+                    name: result.rows[0].name,
+                    email: result.rows[0].email
+                }
+    
+                req.flash('success', 'Login Success!')
+                res.redirect ('/')
+    
+            } else {
+                
+                console.log('password salah')
+                req.flash('danger', 'Password salah')
+                res.redirect('/login')
+                
+            }
+    
+        })
+    })
 
     //. Add Project
 
@@ -86,6 +147,11 @@ db.connect(function(err,client,done){
 
     app.get('/edit-project/:index', function(req,res){
 
+        if(!req.session.user){
+            req.flash('danger', 'Silakan Login Terlebih Dahulu')
+            return res.redirect('/login')
+        }    
+
         let index = req.params.index
 
         client.query(`SELECT * FROM tb_project WHERE id=${index}`, function(err,result){
@@ -100,7 +166,7 @@ db.connect(function(err,client,done){
             let tailwind = data.technologies[3]
             let sass = data.technologies[4]
 
-            res.render('edit-project', {isLogin, index, data, html, css,js, tailwind,sass,startDate,endDate})
+            res.render('edit-project', {isLogin: req.session.isLogin, user: req.session.user, index, data, html, css,js, tailwind,sass,startDate,endDate})
         })
     })
 
@@ -137,11 +203,10 @@ db.connect(function(err,client,done){
                 yearDuration: getYearDuration(item.start_date,item.end_date),
                 monthDuration: getMonthDuration(item.start_date,item.end_date),
                 descriptionShort: item.description.slice(0,90),
-                isLogin
+                isLogin: req.session.isLogin
                 }
             })
-            
-            res.render('index',{isLogin,projects: data})
+            res.render('index',{isLogin: req.session.isLogin, projects: data, user: req.session.user})
         })
     })
         
@@ -162,7 +227,7 @@ db.connect(function(err,client,done){
                 let monthDuration = getMonthDuration(data.start_date,data.end_date)
                 let technologiesName = getTechnologiesName(data)
 
-                res.render('project-detail',{isLogin, projects: data, shortStartDate, shortEndDate, yearDuration, monthDuration, technologiesName})
+                res.render('project-detail',{isLogin: req.session.isLogin, user: req.session.user, projects: data, shortStartDate, shortEndDate, yearDuration, monthDuration, technologiesName})
                 })
                 
             })
@@ -170,11 +235,25 @@ db.connect(function(err,client,done){
     //. Menghapus Project
 
     app.get('/delete-project/:index', function(req,res) {
+
+        if(!req.session.user){
+            req.flash('danger', 'Silakan Login Terlebih Dahulu')
+            return res.redirect('/login')
+        }
+    
         let index = req.params.index
         client.query(`DELETE FROM tb_project WHERE id=${index}`, function(err,result){
             if(err) throw err
             res.redirect('/#myProject')
         })
+    })
+
+    //. Logout
+    
+    app.get('/logout', function(req,res){
+        req.session.destroy()
+
+        res.redirect('/')
     })
 
 })
