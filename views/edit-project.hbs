@@ -58,12 +58,12 @@
                     <div class="mb-3">
                         <label for="projectStartDate" class="form-label"><strong>Start Date</strong></label>
                         <input type="date" class="form-control" id="projectStartDate" name="projectStartDate"
-                            aria-describedby="emailHelp" value="{{data.startDate}}">
+                            aria-describedby="emailHelp" value="{{startDate}}">
                     </div>
                     <div class="mb-3">
                         <label for="projectEndDate" class="form-label"><strong>End Date</strong></label>
                         <input type="date" class="form-control" id="projectEndDate" name="projectEndDate"
-                            value="{{data.endDate}}">
+                            value="{{endDate}}">
                     </div>
                 </div>
                 <div class="mb-3">
@@ -76,7 +76,7 @@
                     <p class="w-100 m-0"><strong>Technologies</strong></p>
                     {{#if html}}
                     <div class="form-check w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-html5 fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-html5 fs-1\"></i>'
                             id="projectHTML" name="projectHTML" checked>
                         <label class="form-check-label" for="projectHTML">
                             HTML
@@ -84,7 +84,7 @@
                     </div>
                     {{else}}
                     <div class="form-check w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-html5 fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-html5 fs-1\"></i>'
                             id="projectHTML" name="projectHTML">
                         <label class="form-check-label" for="projectHTML">
                             HTML
@@ -93,7 +93,7 @@
                     {{/if}}
                     {{#if css}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-css3 fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-css3 fs-1\"></i>'
                             id="projectCSS" name="projectCSS" checked>
                         <label class="form-check-label" for="projectCSS">
                             CSS
@@ -101,7 +101,7 @@
                     </div>
                     {{else}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-css3 fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-css3 fs-1\"></i>'
                             id="projectCSS" name="projectCSS">
                         <label class="form-check-label" for="projectCSS">
                             CSS
@@ -110,7 +110,7 @@
                     {{/if}}
                     {{#if js}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-javascript fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-javascript fs-1\"></i>'
                             id="projectJS" name="projectJS" checked>
                         <label class="form-check-label" for="projectJS">
                             JavaScript
@@ -118,7 +118,7 @@
                     </div>
                     {{else}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-javascript fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-javascript fs-1\"></i>'
                             id="projectJS" name="projectJS">
                         <label class="form-check-label" for="projectJS">
                             JavaScript
@@ -127,16 +127,18 @@
                     {{/if}}
                     {{#if tailwind}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-tailwind-css fs-1'></i>"
-                            id="projectTailwind" name="projectTailwind" checked>
+                        <input class="form-check-input" type="checkbox"
+                            value='<i class=\"bx bxl-tailwind-css fs-1\"></i>' id="projectTailwind"
+                            name="projectTailwind" checked>
                         <label class="form-check-label" for="projectTailwind">
                             TailwindCSS
                         </label>
                     </div>
                     {{else}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-tailwind-css fs-1'></i>"
-                            id="projectTailwind" name="projectTailwind">
+                        <input class="form-check-input" type="checkbox"
+                            value='<i class=\"bx bxl-tailwind-css fs-1\"></i>' id="projectTailwind"
+                            name="projectTailwind">
                         <label class="form-check-label" for="projectTailwind">
                             TailwindCSS
                         </label>
@@ -144,7 +146,7 @@
                     {{/if}}
                     {{#if sass}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-sass fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-sass fs-1\"></i>'
                             id="projectSASS" name="projectSASS" checked>
                         <label class="form-check-label" for="projectSASS">
                             SASS
@@ -152,7 +154,7 @@
                     </div>
                     {{else}}
                     <div class="form-check  w-50">
-                        <input class="form-check-input" type="checkbox" value="<i class='bx bxl-sass fs-1'></i>"
+                        <input class="form-check-input" type="checkbox" value='<i class=\"bx bxl-sass fs-1\"></i>'
                             id="projectSASS" name="projectSASS">
                         <label class="form-check-label" for="projectSASS">
                             SASS

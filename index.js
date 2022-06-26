@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 
-// const db = require('./assets/js/db')
+const db = require('./assets/js/db')
 
 const multer = require('multer')
+const { query } = require('express')
 const upload = multer({dest: 'assets/img/project'})
     
 const port = 8000
@@ -21,63 +22,26 @@ app.get('/contact', function(req,res){
 app.get('/add-project', function(req,res){
     res.render('add-project',{isLogin})
 })
-app.get('/edit-project/:index', function(req,res){
 
-    let index = req.params.index
-    let data = dataProject[index]
-    let html = data.technologies[0]
-    let css = data.technologies[1]
-    let js = data.technologies[2]
-    let tailwind = data.technologies[3]
-    let sass = data.technologies[4]
-    res.render('edit-project', {isLogin, index, data, html, css,js, tailwind,sass})
-})
 //! Render Home sudah sekalian dengan Menampilkan Project di bawah
 
-
 //. Add Project
-
-let dataProject = [
-    {
-        name: 'Gudangku',
-        startDate: '2022-01-13',
-        endDate: '2022-04-14',
-        description: 'Gudangku adalah sebuah aplikasi manajemen gudang berbasis web. Karena berbasis web, aplikasi manajemen gudang dapat digunakan kapan pun dan di mana pun menggunakan perangkat apapun. Baik menggunakan komputer, laptop, tablet, mapun smartphone. Tentu saja, hal ini sangat memudahkan bagi pemilik bisnis sehingga tidak perlu khawatir ketika sedang ada keperluan di luar kantor.',
-        technologies: ["<i class='bx bxl-html5 fs-1'></i>",
-        "<i class='bx bxl-css3 fs-1'></i>","<i class='bx bxl-javascript fs-1'></i>",undefined,undefined],
-        image: './../assets/img/project/gudangku.png',
-        isLogin
-    }
-]
 
 app.post('/add-project', upload.single("projectImage"), function (req,res,next) {
     
     let data = req.body
-    
-    //. Set Data 
-    let name = data.projectName
-    let description = data.projectDescription
-    let startDate = data.projectStartDate
-    let endDate = data.projectEndDate
-    let technologies = [data.projectHTML,data.projectCSS,data.projectJS,data.projectTailwind,data.projectSASS]
-    let image = req.file.path
-
-    //. Set Project Form
-    let setProjectForm = {
-        name,
-        startDate,
-        endDate,
-        description,
-        technologies,
-        image,
-        isLogin
-    }
-
-    dataProject.push(setProjectForm)
     res.redirect('/#myProject')
 })
 
 //. Edit Project
+
+app.get('/edit-project/:index', function(req,res){
+
+    let index = req.params.index
+
+        
+    res.render('edit-project', {isLogin, index})
+})
 
 app.post('/edit-project/:index', upload.single("projectImage"), function (req,res) {
     
@@ -85,26 +49,12 @@ app.post('/edit-project/:index', upload.single("projectImage"), function (req,re
 
     let data = req.body
     
-    //. Set Data 
-    let name = data.projectName
-    let startDate = data.projectStartDate
-    let endDate = data.projectEndDate
-    let description = data.projectDescription
-    let technologies = [data.projectHTML,data.projectCSS,data.projectJS,data.projectTailwind,data.projectSASS]
-    let image = req.file.path
-    
-    //. Set Project Form
-    let setProjectForm = {
-        name,
-        startDate,
-        endDate,
-        description,
-        technologies,
-        image,
-        isLogin
-    }
-
-    dataProject.splice(index,1, setProjectForm)
+    let html = getTechnology(data.projectHTML)
+    let css = getTechnology(data.projectCSS)
+    let js = getTechnology(data.projectJS)
+    let tailwind = getTechnology(data.projectTailwind)
+    let sass = getTechnology(data.projectSASS)    
+        
     res.redirect('/#myProject')
 })
 
@@ -112,58 +62,46 @@ app.post('/edit-project/:index', upload.single("projectImage"), function (req,re
 
 app.get('/', function(req,res){
 
-    // db.connect(function(err,client,done){
-    //     if(err) throw err
-    //     client.query('SELECT * FROM tb_user', function(err,result){
-    //         if(err) throw err
-    //         let data = result.rows
-    //     })
-    // })
-    
-    let data = dataProject.map(function(item){
-        return {
-            ...item,
-        yearDuration: getYearDuration(item.startDate,item.endtDate),
-        monthDuration: getMonthDuration(item.startDate,item.endDate),
-        descriptionShort: item.description.slice(0,90)
-        }
+    db.connect(function(err,client,done){
+        if(err) throw err
+        client.query('SELECT * FROM tb_project', function(err,result){
+            if(err) throw err
+            let data = result.rows.map(function(item){
+                return {
+                    ...item,
+                yearDuration: getYearDuration(item.start_date,item.end_date),
+                monthDuration: getMonthDuration(item.start_date,item.end_date),
+                descriptionShort: item.description.slice(0,90),
+                isLogin
+                }
+            })
+            res.render('index',{isLogin,projects: data})
+        })
     })
-    
-    res.render('index',{isLogin,projects: data})
-
 })
+    
 
 //.  Menampilkan Detail Project Berdasarkan ID
 
 app.get('/project-detail/:index', function(req,res){
 
     let index = req.params.index
-    let data = dataProject[index]
     
-    let shortStartDate = getDateName(data.startDate)
-    let shortEndDate = getDateName(data.endDate)
-    let yearDuration = getYearDuration(data.startDate,data.endtDate)
-    let monthDuration = getMonthDuration(data.startDate,data.endDate)
-    let technologiesName = getTechnologiesName(data)
-    
-    res.render('project-detail',{isLogin, projects: data, shortStartDate, shortEndDate, yearDuration, monthDuration, technologiesName})
+    res.render('project-detail',{isLogin})
 })
 
 //. Menghapus Project
 
 app.get('/delete-project/:index', function(req,res) {
     let index = req.params.index
-    dataProject.splice(index, 1)
     res.redirect('/#myProject')
 })
 
 //. Functions
 
 const getMonthDuration = (startDate, endDate) => {
-    start = new Date(startDate)
-    end = new Date(endDate)
-    
-    let getMiliSecond = end - start
+
+    let getMiliSecond = endDate - startDate
     
     let setYearDuration = Math.floor(getMiliSecond/1000/60/60/24/365)
     let setMonthDuration = Math.floor(getMiliSecond/1000/60/60/24/30)-(setYearDuration*12)
@@ -172,10 +110,8 @@ const getMonthDuration = (startDate, endDate) => {
 }
 
 const getYearDuration = (startDate, endDate) => {
-    start = new Date(startDate)
-    end = new Date(endDate)
-    
-    let getMiliSecond = end - start
+
+    let getMiliSecond = endDate - startDate
     
     let setYearDuration = Math.floor(getMiliSecond/1000/60/60/24/365)
     
@@ -185,7 +121,6 @@ const getYearDuration = (startDate, endDate) => {
 }
 
 const getDateName = (date) => {
-    date = new Date(date)
     
     let monthArr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Agt','Sep','Okt','Nov','Dec']
     
@@ -209,15 +144,15 @@ const getTechnologiesName = (data) => {
         
         let technologyName
 
-        if(item == "<i class='bx bxl-html5 fs-1'></i>"){
+        if(item == '<i class="bx bxl-html5 fs-1"></i>'){
             technologyName = 'HTML'
-        } else if(item == "<i class='bx bxl-css3 fs-1'></i>"){
+        } else if(item == '<i class="bx bxl-css3 fs-1"></i>'){
             technologyName = 'CSS'
-        } else if(item == "<i class='bx bxl-javascript fs-1'></i>"){
+        } else if(item == '<i class="bx bxl-javascript fs-1"></i>'){
             technologyName = 'JavaScript'
-        } else if(item == "<i class='bx bxl-tailwind-css fs-1'></i>"){
+        } else if(item == '<i class="bx bxl-tailwind-css fs-1"></i>'){
             technologyName = 'TailwindCSS'
-        } else if(item == "<i class='bx bxl-sass fs-1'></i>"){
+        } else if(item == '<i class="bx bxl-sass fs-1"></i>'){
             technologyName = 'SASS'
         }
 
@@ -230,6 +165,16 @@ const getTechnologiesName = (data) => {
     }
 
     return names
+}
+
+const getTechnology = (data) => {
+
+    if(data){
+        return technology = data
+    } else {
+        return technology = null
+    }
+
 }
 
 app.listen(port, function(){
