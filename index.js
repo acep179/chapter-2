@@ -25,46 +25,81 @@ app.get('/add-project', function(req,res){
 
 //! Render Home sudah sekalian dengan Menampilkan Project di bawah
 
-//. Add Project
 
-app.post('/add-project', upload.single("projectImage"), function (req,res,next) {
-    
-    let data = req.body
-    res.redirect('/#myProject')
-})
+//. Database Connect
 
-//. Edit Project
+db.connect(function(err,client,done){
+    if(err) throw err
 
-app.get('/edit-project/:index', function(req,res){
+    //. Add Project
 
-    let index = req.params.index
-
+    app.post('/add-project', upload.single("projectImage"), function (req,res,next) {
         
-    res.render('edit-project', {isLogin, index})
-})
-
-app.post('/edit-project/:index', upload.single("projectImage"), function (req,res) {
-    
-    let index = req.params.index
-
-    let data = req.body
-    
-    let html = getTechnology(data.projectHTML)
-    let css = getTechnology(data.projectCSS)
-    let js = getTechnology(data.projectJS)
-    let tailwind = getTechnology(data.projectTailwind)
-    let sass = getTechnology(data.projectSASS)    
+        let data = req.body
+        let html = getTechnology(data.projectHTML)
+        let css = getTechnology(data.projectCSS)
+        let js = getTechnology(data.projectJS)
+        let tailwind = getTechnology(data.projectTailwind)
+        let sass = getTechnology(data.projectSASS)
         
-    res.redirect('/#myProject')
-})
+        const query = `INSERT INTO tb_project(name, start_date, end_date, description, technologies, image)
+        VALUES ('${data.projectName}','${data.projectStartDate}','${data.projectEndDate}', '${data.projectDescription}','{${html},${css},${js},${tailwind},${sass}}','${req.file.path}');`
 
-//. Menampilkan Project + Render Home
+        client.query(query, function(err, result){
+            if(err) throw err
+            
+            res.redirect('/#myProject')
+        })
+    })
 
-app.get('/', function(req,res){
+    //. Edit Project
 
-    db.connect(function(err,client,done){
-        if(err) throw err
-        client.query('SELECT * FROM tb_project', function(err,result){
+    app.get('/edit-project/:index', function(req,res){
+
+        let index = req.params.index
+
+        client.query(`SELECT * FROM tb_project WHERE id=${index}`, function(err,result){
+            if(err) throw err
+            
+            let data = result.rows[0]
+            let startDate = data.start_date.toISOString().split('T')[0]
+            let endDate = data.end_date.toISOString().split('T')[0]
+            let html = data.technologies[0]
+            let css = data.technologies[1]
+            let js = data.technologies[2]
+            let tailwind = data.technologies[3]
+            let sass = data.technologies[4]
+
+            res.render('edit-project', {isLogin, index, data, html, css,js, tailwind,sass,startDate,endDate})
+        })
+    })
+
+    app.post('/edit-project/:index', upload.single("projectImage"), function (req,res) {
+        
+        let index = req.params.index
+
+        let data = req.body
+        
+        let html = getTechnology(data.projectHTML)
+        let css = getTechnology(data.projectCSS)
+        let js = getTechnology(data.projectJS)
+        let tailwind = getTechnology(data.projectTailwind)
+        let sass = getTechnology(data.projectSASS)
+        
+        const query = `UPDATE tb_project SET name='${data.projectName}', start_date='${data.projectStartDate}', end_date='${data.projectEndDate}', description='${data.projectDescription}', technologies='{${html},${css},${js},${tailwind},${sass}}', image='${req.file.path}' WHERE id=${index}`
+
+        client.query(query, function(err, result){
+            if(err) throw err
+            
+            res.redirect('/#myProject')
+        })
+    })
+
+    //. Menampilkan Project + Render Home
+
+    app.get('/', function(req,res){
+
+        client.query('SELECT * FROM tb_project ORDER BY id asc', function(err,result){
             if(err) throw err
             let data = result.rows.map(function(item){
                 return {
@@ -75,26 +110,43 @@ app.get('/', function(req,res){
                 isLogin
                 }
             })
+            
             res.render('index',{isLogin,projects: data})
         })
     })
-})
-    
+        
 
-//.  Menampilkan Detail Project Berdasarkan ID
+    //.  Menampilkan Detail Project Berdasarkan ID
 
-app.get('/project-detail/:index', function(req,res){
+    app.get('/project-detail/:index', function(req,res){
 
-    let index = req.params.index
-    
-    res.render('project-detail',{isLogin})
-})
+        let index = req.params.index
 
-//. Menghapus Project
+            client.query(`SELECT * FROM tb_project WHERE id=${index}`, function(err,result){
+                if(err) throw err
+                let data = result.rows[0]
 
-app.get('/delete-project/:index', function(req,res) {
-    let index = req.params.index
-    res.redirect('/#myProject')
+                let shortStartDate = getDateName(data.start_date)
+                let shortEndDate = getDateName(data.end_date)
+                let yearDuration = getYearDuration(data.start_date,data.end_date)
+                let monthDuration = getMonthDuration(data.start_date,data.end_date)
+                let technologiesName = getTechnologiesName(data)
+
+                res.render('project-detail',{isLogin, projects: data, shortStartDate, shortEndDate, yearDuration, monthDuration, technologiesName})
+                })
+                
+            })
+
+    //. Menghapus Project
+
+    app.get('/delete-project/:index', function(req,res) {
+        let index = req.params.index
+        client.query(`DELETE FROM tb_project WHERE id=${index}`, function(err,result){
+            if(err) throw err
+            res.redirect('/#myProject')
+        })
+    })
+
 })
 
 //. Functions
