@@ -4,8 +4,13 @@
 .basis-50{
     flex-basis: 50%;
 }
-.text-orange{
+.active-orange{
+    font-weight: 600;
     color: orangered;
+}
+.active-orange:hover{
+    font-weight: 600;
+    color: rgb(255, 174, 0);
 }
 .btn-orange {
     background-color: orangered;
@@ -20,7 +25,7 @@
     text-align: justify;
 }
 .hover-orange:hover{
-    color: orangered !important;
+    color: rgb(255, 174, 0) !important;
 }
 .fs-7{
     font-size: .75rem;

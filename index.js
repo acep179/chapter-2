@@ -22,6 +22,12 @@ app.get('/contact', function(req,res){
 app.get('/add-project', function(req,res){
     res.render('add-project',{isLogin})
 })
+app.get('/register', function(req,res){
+    res.render('register',{isLogin})
+})
+app.get('/login', function(req,res){
+    res.render('login',{isLogin})
+})
 
 //! Render Home sudah sekalian dengan Menampilkan Project di bawah
 
@@ -30,6 +36,27 @@ app.get('/add-project', function(req,res){
 
 db.connect(function(err,client,done){
     if(err) throw err
+
+    //. Register
+
+    app.post('/register', function (req,res,next) {
+        
+        let data = req.body
+        console.log(data)
+
+        const query = `INSERT INTO tb_user(name, email, password)
+        VALUES ('${data.userName}','${data.userEmail}','${data.userPassword}');`
+
+        client.query(query, function(err, result){
+            if(err) throw err
+            
+            res.redirect('/#myProject')
+        })
+    })
+
+    //. Login
+
+
 
     //. Add Project
 

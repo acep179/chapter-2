@@ -27,7 +27,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active hover-orange" aria-current="page" href="./">Home</a>
+                            <a class="nav-link hover-orange" aria-current="page" href="./">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link hover-orange" href="./#myProject">My Project</a>
@@ -40,10 +40,10 @@
                     </ul>
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link hover-orange" href="./register">Register</a>
+                            <a class="nav-link active-orange" href="./register">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link hover-orange" href="./login">Login</a>
+                            <a class="nav-link hover-orange me-2" href="./login">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn btn-orange text-light py-1" href="./contact">Contact Me</a>
@@ -53,34 +53,21 @@
             </div>
         </nav>
     </header>
-    <main class="d-flex justify-content-center my-4">
-        <form class="form-width" onsubmit="getContactForm()">
-            <h2 class="text-center">GET IN TOUCH</h1>
+    <main class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+        <form class="form-width" method="post" action="/register">
+            <h2 class="text-center">REGISTER</h1>
                 <div class="mb-3">
-                    <label for="contactName" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="contactName" name="contactName">
+                    <label for="userName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="userName" name="userName">
                 </div>
                 <div class="mb-3">
-                    <label for="contactEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="contactEmail" name="contactEmail"
-                        aria-describedby="emailHelp">
+                    <label for="userEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="userEmail" name="userEmail"
+                        aria-describedby="userEmail">
                 </div>
                 <div class="mb-3">
-                    <label for="contactPhone" class="form-label">Phone Number</label>
-                    <input type="number" class="form-control" id="contactPhone" name="contactPhone">
-                </div>
-                <div class="mb-3">
-                    <label for="contactSubject" class="form-label">Subject</label>
-                    <select name="contactSubject" id="contactSubject" class="form-select">
-                        <option value="">-- Silakan Pilih --</option>
-                        <option>Frontend Web Developer</option>
-                        <option>Beckend Web Developer</option>
-                        <option>Fullstack Web Developer</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="contactMessage" class="form-label">Your Message</label>
-                    <textarea type="number" class="form-control" id="contactMessage" name="contactMessage"></textarea>
+                    <label for="userPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="userPassword" name="userPassword">
                 </div>
                 <div class="d-flex">
                     <button type="submit" class="btn btn-orange text-white ms-auto py-0">Submit</button>
