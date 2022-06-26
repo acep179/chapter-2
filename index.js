@@ -64,7 +64,7 @@ db.connect(function(err,client,done){
 
         const saltRound = 10
         const hashedPassword = bcrypt.hashSync(userPassword, saltRound)
-        const query = `INSERT INTO tb_user(name, email, password)
+        const query2 = `INSERT INTO tb_user(name, email, password)
         VALUES ('${userName}','${userEmail}','${hashedPassword}');`
 
         client.query(query, function(err, result){
@@ -85,8 +85,6 @@ db.connect(function(err,client,done){
         client.query(query, function(err,result){
     
             if(err) throw err
-    
-            console.log(result.rows);
     
             if(result.rows.length == 0) {
                 req.flash('danger','Email belum terdaftar')
@@ -133,8 +131,8 @@ db.connect(function(err,client,done){
         let tailwind = getTechnology(data.projectTailwind)
         let sass = getTechnology(data.projectSASS)
         
-        const query = `INSERT INTO tb_project(name, start_date, end_date, description, technologies, image)
-        VALUES ('${data.projectName}','${data.projectStartDate}','${data.projectEndDate}', '${data.projectDescription}','{${html},${css},${js},${tailwind},${sass}}','${req.file.path}');`
+        const query = `INSERT INTO tb_project(name, author_id, start_date, end_date, description, technologies, image)
+        VALUES ('${data.projectName}','${req.session.user.id}','${data.projectStartDate}','${data.projectEndDate}', '${data.projectDescription}','{${html},${css},${js},${tailwind},${sass}}','${req.file.path}');`
 
         client.query(query, function(err, result){
             if(err) throw err
@@ -195,9 +193,11 @@ db.connect(function(err,client,done){
 
     app.get('/', function(req,res){
 
-        client.query('SELECT * FROM tb_project ORDER BY id asc', function(err,result){
+        const query = `SELECT tb_project.id,author_id,tb_user.name as author, tb_project.name,start_date, end_date,tb_project.description,tb_project.technologies,tb_project.image FROM tb_project LEFT JOIN tb_user ON tb_project.author_id = tb_user.id ORDER BY id DESC`
+
+        client.query(query, function(err,result){
             if(err) throw err
-            let data = result.rows.map(function(item){
+            let dataProject = result.rows.map(function(item){
                 return {
                     ...item,
                 yearDuration: getYearDuration(item.start_date,item.end_date),
@@ -206,7 +206,17 @@ db.connect(function(err,client,done){
                 isLogin: req.session.isLogin
                 }
             })
-            res.render('index',{isLogin: req.session.isLogin, projects: data, user: req.session.user})
+
+            let filterProject
+            if(req.session.user){
+                filterProject = dataProject.filter(function(item) {
+                    return item.author_id === req.session.user.id
+                })
+            }
+
+            let resultProject = req.session.user ? filterProject : dataProject 
+
+            res.render('index',{isLogin: req.session.isLogin, projects: resultProject, user: req.session.user})
         })
     })
         
@@ -252,7 +262,6 @@ db.connect(function(err,client,done){
     
     app.get('/logout', function(req,res){
         req.session.destroy()
-
         res.redirect('/')
     })
 

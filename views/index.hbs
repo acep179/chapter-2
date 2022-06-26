@@ -43,7 +43,7 @@
                     <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
                         {{#if isLogin}}
                         <li class="nav-item">
-                            <p class="nav-link hover-orange mb-0">user: {{user.name}}</p>
+                            <p class="nav-link hover-orange mb-0">Hello, {{user.name}}</p>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link me-2 hover-orange" href="./logout">Logout</a>
@@ -68,6 +68,12 @@
         {{#if messages.success}}
         <div class="alert alert-success alert-dismissible fade show w-25 mx-auto mt-4" role="alert">
             <strong>{{messages.success}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {{/if}}
+        {{#if messages.logout}}
+        <div class="alert alert-danger alert-dismissible fade show w-25 mx-auto mt-4" role="alert">
+            <strong>{{messages.logout}}</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {{/if}}
