@@ -1,15 +1,14 @@
 const express = require('express')
 const app = express()
 
-const db = require('./assets/js/db')
+const db = require('./src/connection/db')
+const upload = require('./src/middleware/upload')
 
 const bcrypt = require('bcrypt')
 const session = require('express-session')
 const flash = require('express-flash')
 
-const multer = require('multer')
 const { query } = require('express')
-const upload = multer({dest: 'assets/img/project'})
 
     
 const port = 8000
@@ -122,7 +121,7 @@ db.connect(function(err,client,done){
 
     //. Add Project
 
-    app.post('/add-project', upload.single("projectImage"), function (req,res,next) {
+    app.post('/add-project', upload.single('projectImage'), function (req,res,next) {
         
         let data = req.body
         let html = getTechnology(data.projectHTML)
