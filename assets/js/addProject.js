@@ -44,21 +44,21 @@ const addProject = () => {
     
     //. Form Validation
     
-    // if(name == ''){
-    //     return alert('Silakan isi Nama Projek!')
-    // } else if (startDate == ''){
-    //     return alert('Silakan tentukan tanggal memulai project!')
-    // } else if (endDate == ''){
-    //     return alert('Silakan tentukan tanggal berakhirnya projek')
-    // } else if (description == ''){
-    //     return alert('Kolom deskripsi masih kosong!')
-    // } else if (technologies.length == 0){
-    //     return alert('Silakan pilih salah satu teknologi yang diterapkan!')
-    // } else if(image.length == 0){
-    //     return alert('Silakan unggah gambar projek anda!')
-    // } else {
-    //     image = URL.createObjectURL(image[0])
-    // }
+    if(name == ''){
+        return alert('Silakan isi Nama Projek!')
+    } else if (startDate == ''){
+        return alert('Silakan tentukan tanggal memulai project!')
+    } else if (endDate == ''){
+        return alert('Silakan tentukan tanggal berakhirnya projek')
+    } else if (description == ''){
+        return alert('Kolom deskripsi masih kosong!')
+    } else if (technologies.length == 0){
+        return alert('Silakan pilih salah satu teknologi yang diterapkan!')
+    } else if(image.length == 0){
+        return alert('Silakan unggah gambar projek anda!')
+    } else {
+        image = URL.createObjectURL(image[0])
+    }
 
     submitForm()
 
@@ -137,8 +137,6 @@ const submitForm = () => {
             image = URL.createObjectURL(image[0])
         }
         
-        // submitFormEdit()
-            
             let form = document.getElementById('formProject')
             form.setAttribute('action', `/edit-project/${id}`)
             form.setAttribute('method', 'POST')
