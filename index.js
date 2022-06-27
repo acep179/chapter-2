@@ -11,7 +11,7 @@ const flash = require('express-flash')
 const { query } = require('express')
 
     
-const port = 8000
+const port = process.env.PORT || 8000
 
 app.set('view engine','hbs')
 app.use('/assets', express.static('assets'))
